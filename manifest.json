@@ -1,0 +1,9 @@
+{
+  "name": "Ari's ABC Fun",
+  "short_name": "ABC Fun",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fefefe",
+  "description": "A fun A–Z phonics game for Ari.",
+  "icons": []
+}
