@@ -1,1 +1,71 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ari's ABC Fun</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  body { font-family: sans-serif; text-align: center; background: #fefefe; margin: 0; }
+  h1 { font-size: 2rem; margin-top: 10px; }
+  .letter { font-size: 6rem; margin: 20px; cursor: pointer; display: inline-block; padding: 20px; border-radius: 20px; background: #fffae5; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+  .example { font-size: 2rem; margin: 10px 0; }
+</style>
+</head>
+<body>
+<h1>Tap a Letter!</h1>
+<div id="letters"></div>
+
+<script>
+const data = {
+  A: ["apple", "ant"],
+  B: ["ball", "bat"],
+  C: ["cat", "car"],
+  D: ["dog", "duck"],
+  E: ["egg", "elk"],
+  F: ["fish", "fan"],
+  G: ["goat", "gum"],
+  H: ["hat", "hen"],
+  I: ["igloo", "ink"],
+  J: ["jam", "jug"],
+  K: ["kite", "kangaroo"],
+  L: ["lion", "log"],
+  M: ["man", "moon"],
+  N: ["net", "nut"],
+  O: ["octopus", "owl"],
+  P: ["pig", "pen"],
+  Q: ["queen", "quilt"],
+  R: ["rat", "ring"],
+  S: ["sun", "sock"],
+  T: ["top", "tent"],
+  U: ["umbrella", "urn"],
+  V: ["van", "vase"],
+  W: ["wig", "web"],
+  X: ["x-ray", "xylophone"],
+  Y: ["yak", "yarn"],
+  Z: ["zebra", "zip"]
+};
+
+const container = document.getElementById("letters");
+Object.keys(data).forEach(letter => {
+  const div = document.createElement("div");
+  div.className = "letter";
+  div.textContent = letter;
+  div.onclick = () => {
+    const examples = data[letter];
+    const choice = examples[Math.floor(Math.random() * examples.length)];
+    speak(`${letter}, ${choice}`);
+    alert(`${letter} is for ${choice}`);
+  };
+  container.appendChild(div);
+});
+
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "en-AU";
+  speechSynthesis.speak(utter);
+}
+</script>
+</body>
+</html>
