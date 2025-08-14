@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ari's Phonics - Full Game</title>
+<title>Ari's Phonics</title>
 <style>
-  body { font-family: sans-serif; background: #f0f9ff; margin: 0; text-align: center; color: #111; }
-  h1 { background: #76c7c0; color: white; padding: 10px; margin: 0; }
-  .tabs { margin: 10px; display: flex; justify-content: center; gap: 10px; }
-  .tab { padding: 10px 20px; background: #0c7c7c; color: white; border: none; border-radius: 8px; cursor: pointer; }
-  .tab.active { background: #055757; }
-  .card { background: white; border-radius: 12px; margin: 10px auto; padding: 10px; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,.2); }
-  img { max-width: 100%; border-radius: 12px; }
-  .big-letter { font-size: 80px; font-weight: bold; }
-  .word { font-size: 28px; margin: 6px 0; }
-  .btn { margin: 5px; padding: 8px 12px; border: none; border-radius: 6px; background: #76c7c0; color: white; cursor: pointer; }
-  .btn:hover { background: #055757; }
-  .grid-letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 10px 0; }
-  .mini { padding: 8px 10px; border-radius: 6px; background: #d1e8e2; cursor: pointer; font-weight: bold; }
-  .mini.active { border: 2px solid #055757; background: #76c7c0; color: white; }
-  .board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
-  .tile { background: #eef; padding: 10px; border-radius: 8px; min-width: 100px; cursor: pointer; }
-  .tile.correct { background: #cfc; }
-  .tile img { max-width: 80px; max-height: 80px; display: block; margin: 0 auto 4px; }
+  body { font-family: sans-serif; background: #f0f9ff; margin:0; text-align:center; color:#111;}
+  h1 { background:#76c7c0;color:white;padding:10px;margin:0;}
+  .tabs { margin:10px; display:flex; justify-content:center; gap:10px;}
+  .tab { padding:10px 20px; background:#0c7c7c; color:white; border:none; border-radius:8px; cursor:pointer;}
+  .tab.active { background:#055757;}
+  .card { background:white; border-radius:12px; margin:10px auto; padding:10px; max-width:400px; box-shadow:0 4px 10px rgba(0,0,0,.2);}
+  img { max-width:100%; border-radius:12px;}
+  .big-letter { font-size:80px; font-weight:bold;}
+  .word { font-size:28px; margin:6px 0;}
+  .btn { margin:5px; padding:8px 12px; border:none; border-radius:6px; background:#76c7c0; color:white; cursor:pointer;}
+  .btn:hover { background:#055757;}
+  .grid-letters { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:10px 0;}
+  .mini { padding:8px 10px; border-radius:6px; background:#d1e8e2; cursor:pointer; font-weight:bold;}
+  .mini.active { border:2px solid #055757; background:#76c7c0; color:white;}
+  .board { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0;}
+  .tile { background:#eef; padding:10px; border-radius:8px; min-width:100px; cursor:pointer;}
+  .tile.correct { background:#cfc;}
+  .tile img { max-width:80px; max-height:80px; display:block; margin:0 auto 4px;}
 </style>
 </head>
 <body>
@@ -34,6 +34,7 @@
   <button class="tab" onclick="showTab('missing')">Missing Letter</button>
 </div>
 
+<!-- LEARN TAB -->
 <div id="learn" class="card">
   <div>
     <button class="btn" onclick="prevLetter()">⬅️</button>
@@ -52,6 +53,7 @@
   <div class="grid-letters" id="gridLetters"></div>
 </div>
 
+<!-- MATCH GAME -->
 <div id="match" class="card" style="display:none">
   <h3>Match the picture with the word</h3>
   <div class="board" id="boardImgs"></div>
@@ -60,11 +62,13 @@
   <button class="btn" onclick="newRound()">New Round</button>
 </div>
 
+<!-- MISSING LETTER GAME -->
 <div id="missing" class="card" style="display:none">
   <h3>Missing Letter Game</h3>
   <div id="missingImg"></div>
   <div id="missingWord" class="word"></div>
   <div id="choices" class="board"></div>
+  <button class="btn" onclick="newMissing()">New Word</button>
 </div>
 
 <footer style="margin:20px 0; font-size:12px; color:#555;">Images: Public Domain/Openclipart</footer>
@@ -78,27 +82,26 @@ const PD = {
   D:[{word:"dog", img:"https://openclipart.org/image/300px/svg_to_png/305838"}],
   E:[{word:"egg", img:"https://openclipart.org/image/400px/251621"}],
   F:[{word:"fish", img:"https://openclipart.org/image/400px/223934"}],
-  G:[{word:"goat", img:"https://openclipart.org/image/400px/302996"}], // replaced image
+  G:[{word:"goat", img:"https://openclipart.org/image/400px/302996"}],
   H:[{word:"hat", img:"https://openclipart.org/image/300px/svg_to_png/179201"}],
   I:[{word:"igloo", img:"https://openclipart.org/image/300px/svg_to_png/320635"}],
-  J:[{word:"jam", img:""}],
+  J:[{word:"jam", img:"https://openclipart.org/image/300px/svg_to_png/246736"}],
   K:[{word:"kite", img:"https://openclipart.org/image/300px/svg_to_png/311549"}],
-  L:[{word:"lion", img:"https://openclipart.org/image/400px/197954"}], // replaced image
+  L:[{word:"lion", img:"https://openclipart.org/image/400px/197954"}],
   M:[{word:"moon", img:"https://openclipart.org/image/400px/150367"}],
   N:[{word:"nest", img:"https://openclipart.org/image/400px/177776"}],
   O:[{word:"owl", img:"https://openclipart.org/image/400px/17566"}],
   P:[{word:"pig", img:"https://openclipart.org/image/400px/201651"}],
-  Q:[{word:"queen", img:""}],
+  Q:[{word:"queen", img:"https://openclipart.org/image/300px/svg_to_png/246737"}],
   R:[{word:"ring", img:"https://openclipart.org/image/400px/229221"}],
   S:[{word:"sun", img:"https://openclipart.org/image/400px/176488"}],
-  T:[{word:"tiger", img:""}],
+  T:[{word:"tiger", img:"https://openclipart.org/image/400px/174569"}],
   U:[{word:"umbrella", img:"https://openclipart.org/image/400px/103813"}],
   V:[{word:"van", img:"https://openclipart.org/image/400px/283135"}],
   W:[{word:"whale", img:"https://openclipart.org/image/400px/257334"}],
   X:[{word:"xylophone", img:"https://openclipart.org/image/400px/280532"}],
   Y:[{word:"yarn", img:"https://openclipart.org/image/400px/178389"}],
-  Z:[{word:"zebra", img:""}],
-  // Extra items
+  Z:[{word:"zebra", img:"https://openclipart.org/image/400px/223129"}],
   train:[{word:"train", img:"https://openclipart.org/image/300px/svg_to_png/301321"}],
   dolphin:[{word:"dolphin", img:"https://openclipart.org/image/400px/242629"}],
   shark:[{word:"shark", img:"https://openclipart.org/image/400px/220514"}],
@@ -107,9 +110,8 @@ const PD = {
 };
 
 // ------------------- LEARN TAB -------------------
-const letters = Object.keys(PD);
+const letters = Object.keys(PD).filter(c=>c.length===1); // only single letters
 let idx=0, exIdx=0;
-
 const elBig=document.getElementById("bigLetter"),
       elPic=document.getElementById("pic"),
       elWord=document.getElementById("word"),
@@ -136,21 +138,12 @@ function render(){
 function nextLetter(){ idx=(idx+1)%letters.length; exIdx=0; render(); }
 function prevLetter(){ idx=(idx-1+letters.length)%letters.length; exIdx=0; render(); }
 function nextExample(){ exIdx++; render(); speakCurrent(); }
-function speakCurrent(){
-  const ex=currentExample();
-  const L=letters[idx];
-  speak(`${L}. ${ex.word}. ${L} says ${L.toLowerCase()}. ${ex.word}.`);
-}
-function speak(text){
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang="en-AU"; speechSynthesis.cancel(); speechSynthesis.speak(u);
-}
+function speakCurrent(){ const ex=currentExample(); const L=letters[idx]; speak(`${L}. ${ex.word}. ${L} says ${L.toLowerCase()}. ${ex.word}.`); }
+function speak(text){ const u=new SpeechSynthesisUtterance(text); u.lang="en-AU"; speechSynthesis.cancel(); speechSynthesis.speak(u); }
 render(); speakCurrent();
 
-// ------------------- MATCH TAB -------------------
-const boardImgs=document.getElementById("boardImgs"),
-      boardWords=document.getElementById("boardWords"),
-      scoreHint=document.getElementById("scoreHint");
+// ------------------- MATCH GAME -------------------
+const boardImgs=document.getElementById("boardImgs"), boardWords=document.getElementById("boardWords"), scoreHint=document.getElementById("scoreHint");
 let gamePairs=[], firstPick=null, score=0;
 function newRound(){
   const pool=letters.filter(L=>PD[L][0].img).slice();
@@ -158,14 +151,11 @@ function newRound(){
   gamePairs=pool.slice(0,3).map(L=>({L, word:PD[L][0].word,img:PD[L][0].img}));
   score=0; scoreHint.textContent="0 / 3";
   boardImgs.innerHTML=""; boardWords.innerHTML="";
-  // Images
   gamePairs.forEach(item=>{
     const t=document.createElement("div"); t.className="tile"; t.dataset.key=item.word;
     const img=document.createElement("img"); img.src=item.img; img.alt=item.word; t.appendChild(img);
-    t.onclick=()=>pickTile(t,"img");
-    boardImgs.appendChild(t);
+    t.onclick=()=>pickTile(t,"img"); boardImgs.appendChild(t);
   });
-  // Words
   const shuffled=gamePairs.slice().sort(()=>Math.random()-0.5);
   shuffled.forEach(item=>{
     const t=document.createElement("div"); t.className="tile"; t.dataset.key=item.word; t.textContent=item.word;
@@ -180,10 +170,8 @@ function pickTile(el,kind){
   firstPick=null; scoreHint.textContent=`${score} / 3`;
 }
 
-// ------------------- MISSING LETTER GAME -------------------
-const missingImg=document.getElementById("missingImg"),
-      missingWord=document.getElementById("missingWord"),
-      choicesDiv=document.getElementById("choices");
+// ------------------- MISSING LETTER -------------------
+const missingImg=document.getElementById("missingImg"), missingWord=document.getElementById("missingWord"), choicesDiv=document.getElementById("choices");
 let missingCurrent=null;
 function newMissing(){
   const pool=letters.filter(L=>PD[L][0].img).slice();
@@ -195,10 +183,7 @@ function newMissing(){
   missingImg.innerHTML=`<img src="${PD[missingCurrent][0].img}" alt="${word}" style="max-width:150px">`;
   const correct=word[missIdx];
   let options=[correct];
-  while(options.length<3){
-    const l=String.fromCharCode(97+Math.floor(Math.random()*26));
-    if(!options.includes(l)) options.push(l);
-  }
+  while(options.length<3){ const l=String.fromCharCode(97+Math.floor(Math.random()*26)); if(!options.includes(l)) options.push(l); }
   options.sort(()=>Math.random()-0.5);
   choicesDiv.innerHTML="";
   options.forEach(opt=>{
@@ -208,11 +193,17 @@ function newMissing(){
   });
   speak(correct);
 }
+newMissing();
 
 // ------------------- TAB SWITCH -------------------
 function showTab(which){
-  document.getElementById("learn").style.display=(which==="learn")?"block":"none";
-  document.getElementById("match").style.display=(which==="match")?"block":"none";
-  document.getElementById("missing").style.display=(which==="missing")?"block":"none";
+  ["learn","match","missing"].forEach(id=>document.getElementById(id).style.display=(id===which)?"block":"none");
   document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
-  document.querySelector(`.tab
+  if(which==="learn") document.querySelector(".tab:nth-child(1)").classList.add("active");
+  if(which==="match") document.querySelector(".tab:nth-child(2)").classList.add("active");
+  if(which==="missing") document.querySelector(".tab:nth-child(3)").classList.add("active");
+}
+newRound();
+</script>
+</body>
+</html>
