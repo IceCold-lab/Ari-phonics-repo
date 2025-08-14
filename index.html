@@ -3,73 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ari's Phonics Fun</title>
+<title>Alphabet Learning Game</title>
 <style>
-  body { font-family: sans-serif; text-align: center; background: #fefefe; margin: 0; }
-  h1 { font-size: 2rem; margin-top: 10px; }
-  .letter { font-size: 6rem; margin: 20px; cursor: pointer; display: inline-block; padding: 20px; border-radius: 20px; background: #fffae5; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background: #f0f8ff;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    background: #4cafef;
+    color: white;
+    padding: 10px;
+    margin: 0;
+  }
+  #alphabet {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+  }
+  .letter-btn {
+    font-size: 2rem;
+    margin: 5px;
+    padding: 15px;
+    background: #ffd54f;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+  }
+  .letter-btn:hover {
+    background: #ffca28;
+  }
+  #word-display {
+    font-size: 2rem;
+    margin-top: 15px;
+  }
+  #img-display img {
+    margin-top: 10px;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+  }
+  #game-area {
+    margin-top: 20px;
+  }
+  .card {
+    display: inline-block;
+    width: 100px;
+    height: 140px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    margin: 5px;
+    vertical-align: top;
+    cursor: pointer;
+    overflow: hidden;
+    font-size: 1.2rem;
+  }
+  .card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+  }
+  .card.matched {
+    background: lightgreen;
+    cursor: default;
+  }
+  #start-game {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    background: #81c784;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
-<h1>Tap a Letter!</h1>
-<div id="letters"></div>
+
+<h1>Alphabet Learning Game</h1>
+
+<div id="alphabet"></div>
+<div id="word-display"></div>
+<div id="img-display"></div>
+<button id="start-game">Start Matching Game</button>
+<div id="game-area"></div>
 
 <script>
 const data = {
-  A: ["apple", "ant"],
-  B: ["ball", "bat"],
-  C: ["cat", "car"],
-  D: ["dog", "duck"],
-  E: ["egg", "elk"],
-  F: ["fish", "fan"],
-  G: ["goat", "gum"],
-  H: ["hat", "hen"],
-  I: ["igloo", "ink"],
-  J: ["jam", "jug"],
-  K: ["kite", "kangaroo"],
-  L: ["lion", "log"],
-  M: ["man", "moon"],
-  N: ["net", "nut"],
-  O: ["octopus", "owl"],
-  P: ["pig", "pen"],
-  Q: ["queen", "quilt"],
-  R: ["rat", "ring"],
-  S: ["sun", "sock"],
-  T: ["top", "tent"],
-  U: ["umbrella", "urn"],
-  V: ["van", "vase"],
-  W: ["wig", "web"],
-  X: ["x-ray", "xylophone"],
-  Y: ["yak", "yarn"],
-  Z: ["zebra", "zip"]
+  A: [
+    { word: "apple", img: "https://placehold.co/120x120?text=Apple" },
+    { word: "ant", img: "https://placehold.co/120x120?text=Ant" }
+  ],
+  B: [
+    { word: "ball", img: "https://placehold.co/120x120?text=Ball" },
+    { word: "bat", img: "https://placehold.co/120x120?text=Bat" }
+  ],
+  C: [
+    { word: "cat", img: "https://placehold.co/120x120?text=Cat" },
+    { word: "cup", img: "https://placehold.co/120x120?text=Cup" }
+  ],
+  D: [
+    { word: "dog", img: "https://placehold.co/120x120?text=Dog" },
+    { word: "drum", img: "https://placehold.co/120x120?text=Drum" }
+  ],
+  E: [
+    { word: "egg", img: "https://placehold.co/120x120?text=Egg" },
+    { word: "elk", img: "https://placehold.co/120x120?text=Elk" }
+  ],
+  F: [
+    { word: "fish", img: "https://placehold.co/120x120?text=Fish" },
+    { word: "fan", img: "https://placehold.co/120x120?text=Fan" }
+  ],
+  G: [
+    { word: "goat", img: "https://placehold.co/120x120?text=Goat" },
+    { word: "gum", img: "https://placehold.co/120x120?text=Gum" }
+  ],
+  H: [
+    { word: "hat", img: "https://placehold.co/120x120?text=Hat" },
+    { word: "hen", img: "https://placehold.co/120x120?text=Hen" }
+  ],
+  I: [
+    { word: "igloo", img: "https://placehold.co/120x120?text=Igloo" },
+    { word: "ink", img: "https://placehold.co/120x120?text=Ink" }
+  ],
+  J: [
+    { word: "jam", img: "https://placehold.co/120x120?text=Jam" },
+    { word: "jug", img: "https://placehold.co/120x120?text=Jug" }
+  ],
+  K: [
+    { word: "kite", img: "https://placehold.co/120x120?text=Kite" },
+    { word: "key", img: "https://placehold.co/120x120?text=Key" }
+  ],
+  L: [
+    { word: "lion", img: "https://placehold.co/120x120?text=Lion" },
+    { word: "log", img: "https://placehold.co/120x120?text=Log" }
+  ],
+  M: [
+    { word: "man", img: "https://placehold.co/120x120?text=Man" },
+    { word: "moon", img: "https://placehold.co/120x120?text=Moon" }
+  ],
+  N: [
+    { word: "net", img: "https://placehold.co/120x120?text=Net" },
+    { word: "nut", img: "https://placehold.co/120x120?text=Nut" }
+  ],
+  O: [
+    { word: "octopus", img: "https://placehold.co/120x120?text=Octopus" },
+    { word: "owl", img: "https://placehold.co/120x120?text=Owl" }
+  ],
+  P: [
+    { word: "pig", img: "https://placehold.co/120x120?text=Pig" },
+    { word: "pen", img: "https://placehold.co/120x120?text=Pen" }
+  ],
+  Q: [
+    { word: "queen", img: "https://placehold.co/120x120?text=Queen" },
+    { word: "quilt", img: "https://placehold.co/120x120?text=Quilt" }
+  ],
+  R: [
+    { word: "rat", img: "https://placehold.co/120x120?text=Rat" },
+    { word: "ring", img: "https://placehold.co/120x120?text=Ring" }
+  ],
+  S: [
+    { word: "sun", img: "https://placehold.co/120x120?text=Sun" },
+    { word: "sock", img: "https://placehold.co/120x120?text=Sock" }
+  ],
+  T: [
+    { word: "top", img: "https://placehold.co/120x120?text=Top" },
+    { word: "tent", img: "https://placehold.co/120x120?text=Tent" }
+  ],
+  U: [
+    { word: "umbrella", img: "https://placehold.co/120x120?text=Umbrella" },
+    { word: "urn", img: "https://placehold.co/120x120?text=Urn" }
+  ],
+  V: [
+    { word: "van", img: "https://placehold.co/120x120?text=Van" },
+    { word: "vase", img: "https://placehold.co/120x120?text=Vase" }
+  ],
+  W: [
+    { word: "wig", img: "https://placehold.co/120x120?text=Wig" },
+    { word: "web", img: "https://placehold.co/120x120?text=Web" }
+  ],
+  X: [
+    { word: "x-ray", img: "https://placehold.co/120x120?text=X-ray" },
+    { word: "xylophone", img: "https://placehold.co/120x120?text=Xylophone" }
+  ],
+  Y: [
+    { word: "yak", img: "https://placehold.co/120x120?text=Yak" },
+    { word: "yarn", img: "https://placehold.co/120x120?text=Yarn" }
+  ],
+  Z: [
+    { word: "zebra", img: "https://placehold.co/120x120?text=Zebra" },
+    { word: "zip", img: "https://placehold.co/120x120?text=Zip" }
+  ]
 };
 
-const container = document.getElementById("letters");
+// Speak helper
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(utterance);
+}
 
+// Create alphabet buttons
+const alphabetDiv = document.getElementById('alphabet');
 Object.keys(data).forEach(letter => {
-  const div = document.createElement("div");
-  div.className = "letter";
-  div.textContent = letter;
-  div.onclick = () => {
-    const examples = data[letter];
-    const choice = examples[Math.floor(Math.random() * examples.length)];
-    speak(`${letter}, ${choice}`);
-    alert(`${letter} is for ${choice}`);
-  };
-  container.appendChild(div);
+  const btn = document.createElement('button');
+  btn.textContent = letter;
+  btn.className = 'letter-btn';
+  btn.addEventListener('click', () => {
+    const choice = data[letter][Math.floor(Math.random() * data[letter].length)];
+    document.getElementById('word-display').textContent = choice.word;
+    document.getElementById('img-display').innerHTML = `<img src="${choice.img}" alt="${choice.word}">`;
+    speak(`${letter}, ${choice.word}`);
+  });
+  alphabetDiv.appendChild(btn);
 });
 
-function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "en-AU";
-  speechSynthesis.speak(utter);
-}
+// Matching Game
+document.getElementById('start-game').addEventListener('click', () => {
+  const gameArea = document.getElementById('game-area');
+  gameArea.innerHTML = '';
+  let items = [];
 
-// Register Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log('Service Worker registered'));
-}
+  // pick 4 random letters for game
+  const letters = Object.keys(data).sort(() => 0.5 - Math.random()).slice(0, 4);
+
+  letters.forEach(letter => {
+    const choice = data[letter][0];
+    items.push({ type: 'letter', value: letter });
+    items.push({ type: 'word', value: choice.word, img: choice.img, match: letter });
+  });
+
+  // shuffle
+  items = items.sort(() => 0.5 - Math.random());
+
+  let firstPick = null;
+  let matchedCount = 0;
+
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    if (item.type === 'letter') {
+      card.textContent = item.value;
+    } else {
+      card.innerHTML = `<img src="${item.img}"><div>${item.value}</div>`;
+    }
+    card.addEventListener('click', () => {
+      if (card.classList.contains('matched')) return;
+      if (!firstPick) {
+        firstPick = { card, item };
+      } else {
+        if (
+          (firstPick.item.type === 'letter' && item.type === 'word' && firstPick.item.value === item.match) ||
+          (firstPick.item.type === 'word' && item.type === 'letter' && firstPick.item.match === item.value)
+        ) {
+          firstPick.card.classList.add('matched');
+          card.classList.add('matched');
+          matchedCount++;
+          if (matchedCount === letters.length) {
+            alert('Well done!');
+          }
+        }
+        firstPick = null;
+      }
+    });
+    gameArea.appendChild(card);
+  });
+});
 </script>
+
 </body>
 </html>
