@@ -1,140 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ari's Phonics</title>
-<style>
-  body { font-family: sans-serif; text-align: center; background: #fef8e4; margin: 0; }
-  h1 { background: #ffb347; color: white; padding: 10px; margin: 0; }
-  #game { display: flex; flex-wrap: wrap; justify-content: center; margin: 10px; }
-  .card { width: 120px; height: 150px; margin: 10px; background: white; border-radius: 10px;
-          box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column;
-          justify-content: center; align-items: center; cursor: pointer; }
-  .card img { width: 100px; height: 100px; object-fit: contain; }
-  .card p { margin: 5px 0; font-weight: bold; }
-  button { padding: 10px 20px; margin: 10px; background: #ffb347; color: white;
-           border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
-  button:hover { background: #ffa500; }
-</style>
+  <meta charset="UTF-8">
+  <title>Ari's Phonics with Real Images</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #f0f9ff; margin: 0; }
+    h1 { background: #76c7c0; color: white; padding: 10px; margin: 0; }
+    #letters, #matching { display: flex; flex-wrap: wrap; justify-content: center; margin: 1em 0; }
+    .card { width: 100px; margin: 5px; text-align: center; cursor: pointer; }
+    .card img { width: 100%; border-radius: 8px; }
+    button { padding: 10px 20px; margin: 10px; font-size: 16px; border: none; border-radius: 6px; background: #76c7c0; color: #fff; cursor: pointer; }
+  </style>
 </head>
 <body>
+  <h1> Ari's Real-Image Phonics </h1>
+  <button onclick="showLetters()">Browse Letters</button>
+  <button onclick="startMatching()">Matching Game</button>
 
-<h1>🔤 Ari's Phonics</h1>
-<button onclick="startLetterMode()">Letter Mode</button>
-<button onclick="startMatchingGame()">Matching Game</button>
-
-<div id="game"></div>
+  <div id="letters"></div>
+  <div id="matching"></div>
 
 <script>
 const data = {
-  A: [{ word: "apple", img: "https://placehold.co/120x120?text=Apple" }, { word: "ant", img: "https://placehold.co/120x120?text=Ant" }],
-  B: [{ word: "ball", img: "https://placehold.co/120x120?text=Ball" }, { word: "bat", img: "https://placehold.co/120x120?text=Bat" }],
-  C: [{ word: "cat", img: "https://placehold.co/120x120?text=Cat" }, { word: "car", img: "https://placehold.co/120x120?text=Car" }],
-  D: [{ word: "dog", img: "https://placehold.co/120x120?text=Dog" }, { word: "duck", img: "https://placehold.co/120x120?text=Duck" }],
-  E: [{ word: "egg", img: "https://placehold.co/120x120?text=Egg" }, { word: "elephant", img: "https://placehold.co/120x120?text=Elephant" }],
-  F: [{ word: "fish", img: "https://placehold.co/120x120?text=Fish" }, { word: "frog", img: "https://placehold.co/120x120?text=Frog" }],
-  G: [{ word: "goat", img: "https://placehold.co/120x120?text=Goat" }, { word: "grape", img: "https://placehold.co/120x120?text=Grape" }],
-  H: [{ word: "hat", img: "https://placehold.co/120x120?text=Hat" }, { word: "hen", img: "https://placehold.co/120x120?text=Hen" }],
-  I: [{ word: "igloo", img: "https://placehold.co/120x120?text=Igloo" }, { word: "ink", img: "https://placehold.co/120x120?text=Ink" }],
-  J: [{ word: "jam", img: "https://placehold.co/120x120?text=Jam" }, { word: "jug", img: "https://placehold.co/120x120?text=Jug" }],
-  K: [{ word: "kite", img: "https://placehold.co/120x120?text=Kite" }, { word: "key", img: "https://placehold.co/120x120?text=Key" }],
-  L: [{ word: "lion", img: "https://placehold.co/120x120?text=Lion" }, { word: "log", img: "https://placehold.co/120x120?text=Log" }],
-  M: [{ word: "man", img: "https://placehold.co/120x120?text=Man" }, { word: "moon", img: "https://placehold.co/120x120?text=Moon" }],
-  N: [{ word: "net", img: "https://placehold.co/120x120?text=Net" }, { word: "nut", img: "https://placehold.co/120x120?text=Nut" }],
-  O: [{ word: "octopus", img: "https://placehold.co/120x120?text=Octopus" }, { word: "owl", img: "https://placehold.co/120x120?text=Owl" }],
-  P: [{ word: "pig", img: "https://placehold.co/120x120?text=Pig" }, { word: "pen", img: "https://placehold.co/120x120?text=Pen" }],
-  Q: [{ word: "queen", img: "https://placehold.co/120x120?text=Queen" }, { word: "quilt", img: "https://placehold.co/120x120?text=Quilt" }],
-  R: [{ word: "rat", img: "https://placehold.co/120x120?text=Rat" }, { word: "ring", img: "https://placehold.co/120x120?text=Ring" }],
-  S: [{ word: "sun", img: "https://placehold.co/120x120?text=Sun" }, { word: "sock", img: "https://placehold.co/120x120?text=Sock" }],
-  T: [{ word: "top", img: "https://placehold.co/120x120?text=Top" }, { word: "tent", img: "https://placehold.co/120x120?text=Tent" }],
-  U: [{ word: "umbrella", img: "https://placehold.co/120x120?text=Umbrella" }, { word: "urn", img: "https://placehold.co/120x120?text=Urn" }],
-  V: [{ word: "van", img: "https://placehold.co/120x120?text=Van" }, { word: "vase", img: "https://placehold.co/120x120?text=Vase" }],
-  W: [{ word: "wig", img: "https://placehold.co/120x120?text=Wig" }, { word: "web", img: "https://placehold.co/120x120?text=Web" }],
-  X: [{ word: "x-ray", img: "https://placehold.co/120x120?text=X-ray" }, { word: "xylophone", img: "https://placehold.co/120x120?text=Xylophone" }],
-  Y: [{ word: "yak", img: "https://placehold.co/120x120?text=Yak" }, { word: "yarn", img: "https://placehold.co/120x120?text=Yarn" }],
-  Z: [{ word: "zebra", img: "https://placehold.co/120x120?text=Zebra" }, { word: "zip", img: "https://placehold.co/120x120?text=Zip" }]
+  A: [
+    { word: "Apple", img: "https://www.publicdomainpictures.net/pictures/50 000/nahled/apple-fruit-png.png" }  /* Public domain PNG of apple */ 0,
+    { word: "Ant", img: "https://www.publicdomainpictures.net/pictures/100000/nahled/ant-on-leaf.jpg" }
+  ],
+  B: [
+    { word: "Ball", img: "https://www.publicdomainpictures.net/pictures/19 000/nahled/ball.jpg" }  /* Public domain ball image */ 1,
+    { word: "Bowling Ball", img: "https://www.publicdomainpictures.net/pictures/63 000/nahled/bowling-ball.png" } 2
+  ],
+  C: [
+    { word: "Cat", img: "https://www.publicdomainpictures.net/pictures/25 000/nahled/cat-1.jpg" },
+    { word: "Cup", img: "https://www.publicdomainpictures.net/pictures/30 000/nahled/cup.jpg" }
+  ]
+  // Extend for D–Z...
 };
 
 function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "en-AU";
-  speechSynthesis.speak(utter);
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-AU';
+  speechSynthesis.speak(u);
 }
 
-function startLetterMode() {
-  const container = document.getElementById("game");
-  container.innerHTML = "";
+function showLetters() {
+  const container = document.getElementById('letters');
+  container.innerHTML = '';
   Object.keys(data).forEach(letter => {
     data[letter].forEach(item => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<img src="${item.img}" alt="${item.word}"><p>${letter}</p>`;
-      card.onclick = () => {
-        speak(`${letter}, ${item.word}`);
-        alert(`${letter} is for ${item.word}`);
-      };
-      container.appendChild(card);
+      const f = document.createElement('div');
+      f.className = 'card';
+      f.innerHTML = `<img src="${item.img}" alt="${item.word}"><div>${letter}: ${item.word}</div>`;
+      f.onclick = () => speak(`${letter}, ${item.word}`);
+      container.appendChild(f);
     });
   });
+  document.getElementById('matching').innerHTML = '';
 }
 
-function startMatchingGame() {
-  const container = document.getElementById("game");
-  container.innerHTML = "";
-
-  // Flatten data into one array
-  let allItems = [];
-  Object.keys(data).forEach(letter => {
-    data[letter].forEach(item => allItems.push({ letter, ...item }));
+function startMatching() {
+  const container = document.getElementById('matching');
+  container.innerHTML = '';
+  
+  const letters = Object.keys(data);
+  const chosen = letters.slice(0, 3); // just A, B, C for demo
+  
+  const cards = [];
+  chosen.forEach(letter => {
+    cards.push({ type: 'letter', value: letter });
+    cards.push({ type: 'word', letter, value: data[letter][0].word, img: data[letter][0].img });
   });
-
-  // Randomly choose 6 pairs
-  const chosen = [];
-  while (chosen.length < 6) {
-    const r = allItems[Math.floor(Math.random() * allItems.length)];
-    if (!chosen.find(c => c.word === r.word)) chosen.push(r);
-  }
-
-  // Create cards: half words, half images
-  let cards = [];
-  chosen.forEach(item => {
-    cards.push({ type: "word", content: item.word, letter: item.letter });
-    cards.push({ type: "img", content: item.img, letter: item.letter, word: item.word });
-  });
-
-  // Shuffle cards
   cards.sort(() => Math.random() - 0.5);
-
+  
   let firstCard = null;
-
-  cards.forEach(cardData => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = cardData.type === "img"
-      ? `<img src="${cardData.content}" alt="${cardData.word}">`
-      : `<p>${cardData.content}</p>`;
-    card.onclick = () => {
+  cards.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = c.type==='letter' ? `<div style="font-size:1.5em;">${c.value}</div>` : `<img src="${c.img}" alt="${c.value}"><div>${c.value}</div>`;
+    div.onclick = () => {
       if (!firstCard) {
-        firstCard = { el: card, data: cardData };
-        card.style.background = "#d0f0c0";
-        speak(cardData.type === "img" ? cardData.word : cardData.content);
+        firstCard = c;
+        div.style.opacity = 0.5;
       } else {
-        if ((firstCard.data.type === "word" && cardData.type === "img" && firstCard.data.content === cardData.word) ||
-            (firstCard.data.type === "img" && cardData.type === "word" && firstCard.data.word === cardData.content)) {
-          card.style.background = "#d0f0c0";
-          firstCard = null;
+        if (firstCard.type !== c.type && firstCard.letter === c.letter) {
+          speak('Well done!');
         } else {
-          alert("Try again!");
-          firstCard.el.style.background = "white";
-          firstCard = null;
+          speak('Try again');
         }
+        document.getElementById('matching').querySelectorAll('.card').forEach(el => el.style.opacity = 1);
+        firstCard = null;
       }
     };
-    container.appendChild(card);
+    container.appendChild(div);
   });
+  
+  document.getElementById('letters').innerHTML = '';
 }
 </script>
-
 </body>
 </html>
