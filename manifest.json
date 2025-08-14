@@ -1,9 +1,9 @@
 {
-  "name": "Ari's ABC Fun",
-  "short_name": "ABC Fun",
-  "start_url": ".",
+  "name": "Ari's Phonics",
+  "short_name": "Phonics",
+  "start_url": "/ari-phonics/",
   "display": "standalone",
-  "background_color": "#fefefe",
-  "description": "A fun A–Z phonics game for Ari.",
+  "background_color": "#fdf6e3",
+  "theme_color": "#ffcc66",
   "icons": []
 }
