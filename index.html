@@ -13,6 +13,10 @@
   .example { font-size: 2rem; margin: 10px 0; }
 </style>
 </head>
+  if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("Service Worker Registered"));
+}
 <body>
 <h1>Tap a Letter!</h1>
 <div id="letters"></div>
