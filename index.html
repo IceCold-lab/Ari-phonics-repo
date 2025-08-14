@@ -1,40 +1,109 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ari's ABC Fun</title>
-<link rel="manifest" href="manifest.json">
-<style>
-  body { font-family: sans-serif; text-align: center; background: #fefefe; margin: 0; }
-  h1 { font-size: 2rem; margin-top: 10px; }
-  .letter { font-size: 6rem; margin: 20px; cursor: pointer; display: inline-block; padding: 20px; border-radius: 20px; background: #fffae5; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-  .example { font-size: 2rem; margin: 10px 0; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ari's Phonics Game</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #fdf6e3;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      background-color: #ffcc66;
+      margin: 0;
+      padding: 1rem;
+    }
+    #letter {
+      font-size: 8rem;
+      margin: 2rem 0;
+    }
+    #example {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+    button {
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+      margin: 1rem;
+      background-color: #66ccff;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #33bbff;
+    }
+  </style>
 </head>
-  if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js")
-    .then(() => console.log("Service Worker Registered"));
-}
 <body>
-<h1>Tap a Letter!</h1>
-<div id="letters"></div>
+  <h1>Ari's Phonics</h1>
+  <div id="letter">A</div>
+  <div id="example">apple</div>
+  <button onclick="prevLetter()">⬅️</button>
+  <button onclick="nextLetter()">➡️</button>
 
-<script>
-const data = {
-  A: ["apple", "ant"],
-  B: ["ball", "bat"],
-  C: ["cat", "car"],
-  D: ["dog", "duck"],
-  E: ["egg", "elk"],
-  F: ["fish", "fan"],
-  G: ["goat", "gum"],
-  H: ["hat", "hen"],
-  I: ["igloo", "ink"],
-  J: ["jam", "jug"],
-  K: ["kite", "kangaroo"],
-  L: ["lion", "log"],
+  <script>
+    const letters = [
+      { letter: 'A', example: 'apple' },
+      { letter: 'B', example: 'ball' },
+      { letter: 'C', example: 'cat' },
+      { letter: 'D', example: 'dog' },
+      { letter: 'E', example: 'egg' },
+      { letter: 'F', example: 'fish' },
+      { letter: 'G', example: 'goat' },
+      { letter: 'H', example: 'hat' },
+      { letter: 'I', example: 'igloo' },
+      { letter: 'J', example: 'jam' },
+      { letter: 'K', example: 'kite' },
+      { letter: 'L', example: 'lion' },
+      { letter: 'M', example: 'moon' },
+      { letter: 'N', example: 'nest' },
+      { letter: 'O', example: 'octopus' },
+      { letter: 'P', example: 'pig' },
+      { letter: 'Q', example: 'queen' },
+      { letter: 'R', example: 'ring' },
+      { letter: 'S', example: 'sun' },
+      { letter: 'T', example: 'top' },
+      { letter: 'U', example: 'umbrella' },
+      { letter: 'V', example: 'van' },
+      { letter: 'W', example: 'wig' },
+      { letter: 'X', example: 'x-ray' },
+      { letter: 'Y', example: 'yarn' },
+      { letter: 'Z', example: 'zebra' }
+    ];
+
+    let index = 0;
+    const letterDiv = document.getElementById('letter');
+    const exampleDiv = document.getElementById('example');
+
+    function updateDisplay() {
+      letterDiv.textContent = letters[index].letter;
+      exampleDiv.textContent = letters[index].example;
+    }
+
+    function nextLetter() {
+      index = (index + 1) % letters.length;
+      updateDisplay();
+    }
+
+    function prevLetter() {
+      index = (index - 1 + letters.length) % letters.length;
+      updateDisplay();
+    }
+
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker registered'));
+    }
+  </script>
+</body>
+</html>  L: ["lion", "log"],
   M: ["man", "moon"],
   N: ["net", "nut"],
   O: ["octopus", "owl"],
