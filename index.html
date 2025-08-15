@@ -1,131 +1,289 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ari's Phonics Game</title>
-<style>
-    body {
-        font-family: sans-serif;
-        text-align: center;
-        background: #f0f8ff;
-        margin: 0;
-        padding: 0;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ari’s Phonics – Missing Sound</title>
+  <style>
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --ink:#111; --muted:#667085; --ok:#22c55e; --bad:#ef4444; --brand:#2563eb;
     }
-    h1 {
-        background: #4CAF50;
-        color: white;
-        padding: 10px;
-        margin: 0;
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      background:linear-gradient(180deg,#eaf2ff,transparent 40%) var(--bg); color:var(--ink);
     }
-    .letter-card, .choice {
-        display: inline-block;
-        margin: 10px;
-        padding: 10px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    header{padding:16px 20px 4px}
+    h1{margin:0 0 6px; font-size:1.25rem; font-weight:800}
+    .sub{margin:0 0 10px; color:var(--muted); font-size:.95rem}
+    .wrap{
+      max-width:900px; margin:0 auto; padding:12px 16px 40px;
     }
-    img {
-        max-width: 150px;
-        border-radius: 10px;
+    .card{
+      background:var(--card); border-radius:18px; box-shadow:0 10px 30px rgba(24,39,75,.06);
+      padding:16px;
     }
-    button {
-        margin-top: 10px;
-        padding: 8px 15px;
-        font-size: 16px;
-        border: none;
-        background: #4CAF50;
-        color: white;
-        border-radius: 5px;
+    .row{display:flex; gap:16px; flex-wrap:wrap}
+    .left,.right{flex:1 1 320px}
+    .panel{
+      background:#fff; border-radius:16px; padding:14px; box-shadow:0 8px 18px rgba(16,24,40,.06);
+      min-height:120px;
     }
-</style>
+    .imgBox{
+      display:flex; align-items:center; justify-content:center; background:#fff; border-radius:16px;
+      height:260px; overflow:hidden; border:1px solid #eef2f7;
+    }
+    .imgBox img{max-height:100%; max-width:100%; object-fit:contain}
+    .word{
+      margin-top:10px; text-align:center; font-size:2.2rem; font-weight:800; letter-spacing:.06em;
+    }
+    .gap{
+      display:inline-block; width:1.6ch; border-bottom:.18em solid var(--brand); margin:0 .1ch; line-height:1;
+    }
+    .choices{
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:14px;
+    }
+    .choice{
+      appearance:none; border:2px solid #e5e7eb; border-radius:12px; padding:12px 18px; font-size:1.4rem;
+      background:#fff; color:#111; cursor:pointer; min-width:60px; font-weight:800;
+      box-shadow:0 2px 6px rgba(17,24,39,.05);
+      transition:transform .06s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .choice:active{ transform:scale(.98) }
+    .choice.correct{ border-color:var(--ok); box-shadow:0 6px 14px rgba(34,197,94,.25) }
+    .choice.wrong{ border-color:var(--bad); box-shadow:0 6px 14px rgba(239,68,68,.25) }
+    .controls{display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap}
+    .btn{
+      appearance:none; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer;
+      background:var(--brand); color:#fff; box-shadow:0 6px 16px rgba(37,99,235,.22);
+    }
+    .btn.secondary{ background:#fff; color:#111; border:1px solid #e5e7eb; box-shadow:none }
+    .status{ text-align:center; font-size:.95rem; color:var(--muted); margin-top:10px }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
+      background:#eef2ff; color:#334155; font-weight:700; font-size:.9rem;
+    }
+    .bar{height:8px; background:#eef2ff; border-radius:999px; overflow:hidden}
+    .bar > i{display:block; height:100%; background:linear-gradient(90deg,#60a5fa,#22c55e); width:0%}
+    footer{ text-align:center; color:#98a2b3; font-size:.8rem; padding:14px 10px}
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Ari’s Phonics</h1>
+    <p class="sub">Hear the **sound**, pick the right letter. Starting with <strong class="pill">a</strong> <strong class="pill">r</strong> <strong class="pill">i</strong></p>
+  </header>
 
-<h1>Ari's Phonics</h1>
-<div id="game"></div>
+  <div class="wrap">
+    <div class="card">
+      <div class="row">
+        <div class="left">
+          <div class="imgBox">
+            <img id="pic" alt="picture" />
+          </div>
+          <div id="word" class="word" aria-live="polite"></div>
+          <div class="controls">
+            <button id="btnSound" class="btn" aria-label="Hear the sound">🔊 Hear sound</button>
+            <button id="btnNew" class="btn secondary">Next</button>
+          </div>
+          <div id="msg" class="status"></div>
+        </div>
+        <div class="right">
+          <div class="panel">
+            <div class="choices" id="choices"></div>
+          </div>
+          <div class="panel" style="margin-top:12px">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin:4px 2px 10px">
+              <div>Progress</div>
+              <div id="unlocked" class="pill"></div>
+            </div>
+            <div class="bar"><i id="prog"></i></div>
+            <div id="tiny" class="status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script>
-const lettersData = {
-    A: { word: "apple", img: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg", sound: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kids-Phonics-A.mp3" },
-    R: { word: "rat", img: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Rattus_norvegicus_1.jpg", sound: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kids-Phonics-R.mp3" },
-    I: { word: "igloo", img: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Igloo_at_Parc_Jean-Drapeau.jpg", sound: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kids-Phonics-I.mp3" }
-};
+  <footer>Images: Openclipart (public domain). Voice: Web Speech (en-AU if available).</footer>
 
-let unlockedLetters = ["A", "R", "I"];
-let currentLetter = null;
+  <script>
+    // ---------- DATA ----------
+    const ASSETS = {
+      a: {
+        word: "apple",
+        img: "https://openclipart.org/image/800px/195100", // PD
+        phonemeText: "aeh" // approx short 'a' (as in 'cat')
+      },
+      r: {
+        word: "ring",
+        img: "https://openclipart.org/image/800px/275892", // PD
+        phonemeText: "ruh" // initial /r/ approximation
+      },
+      i: {
+        word: "igloo",
+        img: "https://openclipart.org/image/800px/176338", // PD
+        phonemeText: "ih" // short 'i' (as in 'sit')
+      }
+    };
 
-// Start with intro
-function startIntro() {
-    const gameDiv = document.getElementById("game");
-    gameDiv.innerHTML = "<h2>Let's learn our first letters!</h2>";
-    unlockedLetters.forEach(letter => {
-        const card = document.createElement("div");
-        card.className = "letter-card";
-        card.innerHTML = `<h3>${letter}</h3>
-                          <img src="${lettersData[letter].img}">
-                          <p>${lettersData[letter].word}</p>`;
-        gameDiv.appendChild(card);
-        // Play sound after small delay
-        setTimeout(() => { playPhoneme(letter); }, 1000 * (unlockedLetters.indexOf(letter) + 1));
-    });
-    // After sounds, start the game
-    setTimeout(startGame, 4000);
-}
+    // start with a, r, i unlocked
+    const unlocked = ["a","r","i"];
+    const allLetters = "abcdefghijklmnopqrstuvwxyz".split("");
 
-function startGame() {
-    const gameDiv = document.getElementById("game");
-    gameDiv.innerHTML = "";
+    // ---------- STATE ----------
+    let current = null;        // {letter, word, img, missIndex}
+    let streak = 0;            // overall correct streak to unlock future letters later
+    const goalToUnlock = 6;    // tweakable
 
-    // Pick a random letter
-    currentLetter = unlockedLetters[Math.floor(Math.random() * unlockedLetters.length)];
-    const word = lettersData[currentLetter].word;
-    const missingIndex = Math.floor(Math.random() * word.length);
-    const displayWord = word.substring(0, missingIndex) + "_" + word.substring(missingIndex + 1);
-
-    // Show image and word
-    gameDiv.innerHTML = `<div class="letter-card">
-                            <img src="${lettersData[currentLetter].img}">
-                            <h2>${displayWord}</h2>
-                            <button onclick="playPhoneme(currentLetter)">Hear sound</button>
-                         </div>`;
-
-    // Choices
-    const choicesDiv = document.createElement("div");
-    let choices = [currentLetter];
-    while (choices.length < 3) {
-        let randomLetter = unlockedLetters[Math.floor(Math.random() * unlockedLetters.length)];
-        if (!choices.includes(randomLetter)) choices.push(randomLetter);
+    // ---------- UTILS ----------
+    function pickAUVoice(){
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      // Prefer Australian voices
+      let v = voices.find(v => /en-AU/i.test(v.lang));
+      if (!v) v = voices.find(v => /English/i.test(v.name) && /en/i.test(v.lang));
+      return v || null;
     }
-    choices.sort(() => Math.random() - 0.5);
 
-    choices.forEach(letter => {
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.textContent = letter;
-        btn.onclick = () => checkAnswer(letter);
-        choicesDiv.appendChild(btn);
-    });
+    function speakPhoneme(letter){
+      const info = ASSETS[letter];
+      if (!info) return;
+      const text = info.phonemeText || letter;
 
-    gameDiv.appendChild(choicesDiv);
-}
-
-function checkAnswer(letter) {
-    if (letter === currentLetter) {
-        alert("✅ Correct!");
-        startGame();
-    } else {
-        alert("❌ Try again!");
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(text.replace(/[^\w\s]/g,""));
+        const voice = pickAUVoice();
+        if (voice) u.voice = voice;
+        u.lang = (voice && voice.lang) || "en-AU";
+        u.rate = 0.8; // a bit slower for clarity
+        u.pitch = 1.0;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } else {
+        // very old browsers
+        const el = document.getElementById('msg');
+        el.textContent = "Speech not supported on this device.";
+      }
     }
-}
 
-function playPhoneme(letter) {
-    new Audio(lettersData[letter].sound).play();
-}
+    function shuffle(arr){
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
-startIntro();
-</script>
+    function sampleDistinct(pool, n, exclude){
+      const set = new Set([exclude]);
+      const out = [exclude];
+      const options = pool.filter(x => !set.has(x));
+      shuffle(options);
+      for (const l of options) {
+        out.push(l); set.add(l);
+        if (out.length === n) break;
+      }
+      if (out.length < n) {
+        // pad with letters outside unlocked if needed
+        const rest = allLetters.filter(x => !set.has(x));
+        shuffle(rest);
+        while (out.length < n && rest.length) out.push(rest.shift());
+      }
+      return shuffle(out);
+    }
 
+    // ---------- RENDER ----------
+    function newRound(){
+      // choose one of the unlocked letters and its word
+      const letter = unlocked[Math.floor(Math.random()*unlocked.length)];
+      const item = ASSETS[letter];
+      const w = item.word;
+      // Missing index = first instance of that letter; fallback to 0
+      let idx = w.indexOf(letter);
+      if (idx < 0) idx = 0;
+
+      current = { letter, word:w, img:item.img, missIndex:idx };
+
+      // picture
+      const pic = document.getElementById('pic');
+      pic.src = current.img;
+      pic.alt = current.word;
+
+      // word with a gap
+      const letters = current.word.split("");
+      const rendered = letters.map((ch,i) => {
+        if (i === current.missIndex) return `<span class="gap" aria-label="missing letter">&nbsp;</span>`;
+        return `<span>${ch}</span>`;
+      }).join("");
+      document.getElementById('word').innerHTML = rendered;
+
+      // choices (3)
+      const lettersToShow = sampleDistinct(unlocked, 3, current.letter);
+      const c = document.getElementById('choices');
+      c.innerHTML = "";
+      lettersToShow.forEach(L => {
+        const b = document.createElement('button');
+        b.className = 'choice';
+        b.type = 'button';
+        b.textContent = L.toUpperCase();
+        b.setAttribute('aria-label', `Choose letter ${L}`);
+        b.onclick = () => checkAnswer(L, b);
+        c.appendChild(b);
+      });
+
+      // UI text
+      document.getElementById('msg').textContent = "Listen to the sound, then tap the matching letter.";
+      document.getElementById('tiny').textContent = `Target: “${current.letter}” in “${current.word}”`;
+      updateProgress();
+    }
+
+    function checkAnswer(ch, btn){
+      const correct = ch.toLowerCase() === current.letter;
+      if (correct){
+        btn.classList.add('correct');
+        document.getElementById('msg').textContent = "Nice! 🎉";
+        streak++;
+        fillGap();
+        updateProgress();
+        // small delay then next
+        setTimeout(()=> newRound(), 700);
+      } else {
+        btn.classList.add('wrong');
+        document.getElementById('msg').textContent = "Try again 🙂";
+        streak = Math.max(0, streak-1);
+        updateProgress();
+        setTimeout(()=> btn.classList.remove('wrong'), 450);
+      }
+    }
+
+    function fillGap(){
+      const wordEl = document.getElementById('word');
+      const spans = wordEl.querySelectorAll('span');
+      const gap = wordEl.querySelector('.gap');
+      if (gap){
+        gap.outerHTML = `<span style="border-bottom:.18em solid #22c55e">${current.letter}</span>`;
+      }
+    }
+
+    function updateProgress(){
+      const pct = Math.min(100, Math.round(100 * streak / goalToUnlock));
+      document.getElementById('prog').style.width = pct + "%";
+      document.getElementById('unlocked').textContent = `Unlocked: ${unlocked.join(", ")}`;
+    }
+
+    // ---------- EVENTS ----------
+    document.getElementById('btnNew').addEventListener('click', newRound);
+    document.getElementById('btnSound').addEventListener('click', ()=> speakPhoneme(current.letter));
+
+    // some browsers populate voices async
+    if ('speechSynthesis' in window){
+      window.speechSynthesis.onvoiceschanged = () => {};
+    }
+
+    // ---------- GO ----------
+    // Preload images for snappy feel
+    Object.values(ASSETS).forEach(a => { const i = new Image(); i.src = a.img; });
+    newRound();
+  </script>
 </body>
 </html>
